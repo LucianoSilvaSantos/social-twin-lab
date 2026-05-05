@@ -2,7 +2,7 @@
 
 ## Iteração Atual
 
-ITERATION_02_POLICY_SANDBOX
+ITERATION_03_INFLUENCE_GRAPH
 
 ---
 
@@ -14,15 +14,17 @@ EM EXECUÇÃO
 
 ## Objetivo Atual
 
-Implementar o módulo **Policy Sandbox** do Social Twin Lab, permitindo testar intervenções de política pública e comparar os resultados entre um cenário base e um cenário com política aplicada.
+Implementar o módulo **Influence Graph** do Social Twin Lab, adicionando uma camada de rede social simulada ao motor de simulação.
 
-Esta iteração deve evoluir o MVP de simulação criado na Iteration 01 para um laboratório de decisão, sem alterar a proposta central do sistema: simular tendências coletivas prováveis, não prever comportamentos individuais.
+Esta iteração deve evoluir o sistema para representar relações de influência entre agentes, grupos e lideranças, permitindo observar como conexões sociais, líderes e clusters afetam o comportamento coletivo.
+
+A proposta central permanece a mesma: o sistema simula tendências coletivas prováveis e cenários possíveis, não prevê comportamento individual.
 
 ---
 
 ## Arquivo de Referência Principal
 
-`docs/iterations/ITERATION_02_POLICY_SANDBOX.md`
+`docs/iterations/ITERATION_03_INFLUENCE_GRAPH.md`
 
 ---
 
@@ -38,8 +40,9 @@ Antes de alterar qualquer código, o Codex deve ler e respeitar:
 6. `docs/product/MODULES.md`
 7. `docs/iterations/ITERATION_01_MVP_SIMULATION.md`
 8. `docs/iterations/ITERATION_02_POLICY_SANDBOX.md`
-9. `docs/qa/ACCEPTANCE_CHECKLIST.md`
-10. `docs/qa/TEST_SCENARIOS.md`
+9. `docs/iterations/ITERATION_03_INFLUENCE_GRAPH.md`
+10. `docs/qa/ACCEPTANCE_CHECKLIST.md`
+11. `docs/qa/TEST_SCENARIOS.md`
 
 ---
 
@@ -47,15 +50,17 @@ Antes de alterar qualquer código, o Codex deve ler e respeitar:
 
 Nesta iteração, implementar somente:
 
-- criação do módulo `backend/app/simulation/policy_sandbox.py`;
-- definição de schemas Pydantic para requisição e resposta da simulação de política;
-- criação do endpoint `POST /api/policy-simulation/run`;
-- execução de uma simulação base sem política;
-- execução de uma simulação com política aplicada;
-- comparação estruturada entre cenário base e cenário com política;
-- evolução da página `PolicySandboxPage` no frontend;
-- criação de sliders para variáveis de política;
-- exibição dos resultados comparativos em cards, gráfico e resumo textual.
+- criação ou evolução do módulo `backend/app/simulation/influence.py`;
+- criação de uma rede de influência simples entre agentes;
+- criação de grupos sociais e líderes sintéticos;
+- cálculo de influência local baseada nos vizinhos conectados;
+- integração da influência local ao comportamento dos agentes;
+- criação do endpoint `POST /api/influence-simulation/run`;
+- retorno de métricas da rede e dos resultados da simulação;
+- evolução da página `InfluenceGraphPage` no frontend;
+- visualização inicial da rede com nós e conexões;
+- uso de cores para estados dos agentes;
+- exibição de métricas como número de líderes, clusters, conexões e distribuição de estados.
 
 ---
 
@@ -64,25 +69,27 @@ Nesta iteração, implementar somente:
 Não implementar nesta execução:
 
 - Psychohistory Engine completo;
-- Influence Graph real;
+- agentes com memória longa;
+- IA generativa;
 - Monte Carlo;
 - banco de dados;
 - autenticação;
-- IA generativa;
-- agentes com memória;
-- mapas;
-- grafos reais;
+- mapas geográficos;
+- simulação espacial real;
+- animação complexa em tempo real;
 - persistência de histórico;
-- alteração profunda da lógica da Iteration 01 sem necessidade.
+- reescrita profunda da Iteration 01 ou 02 sem necessidade.
 
 ---
 
 ## Regras para o Codex
 
-- Seguir rigorosamente o escopo da `ITERATION_02_POLICY_SANDBOX`.
-- Reutilizar o motor de simulação já implementado na Iteration 01 sempre que possível.
-- Não quebrar o endpoint existente `POST /api/simulations/run`.
-- Não antecipar funcionalidades da Iteration 03 ou posteriores.
+- Seguir rigorosamente o escopo da `ITERATION_03_INFLUENCE_GRAPH`.
+- Reutilizar o motor de simulação da Iteration 01 sempre que possível.
+- Não quebrar os endpoints existentes:
+  - `POST /api/simulations/run`
+  - `POST /api/policy-simulation/run`
+- Não antecipar funcionalidades da Iteration 04 ou posteriores.
 - Não alterar decisões arquiteturais sem registrar em `docs/product/DECISIONS.md`.
 - Manter código limpo, modular e simples.
 - Usar inglês para nomes de arquivos, funções, variáveis e classes.
@@ -90,7 +97,8 @@ Não implementar nesta execução:
 - Manter regras de negócio no backend, não no frontend.
 - Usar schemas Pydantic para entrada e saída da API.
 - Validar entradas da simulação antes de executar.
-- Garantir que valores de variáveis de política permaneçam em faixas válidas usando clamp.
+- Garantir que valores numéricos permaneçam em faixas válidas usando clamp.
+- Manter a simulação explicável e auditável.
 
 ---
 
@@ -100,14 +108,15 @@ A iteração será considerada concluída quando:
 
 - backend rodar sem erro;
 - frontend rodar sem erro;
-- endpoint `POST /api/policy-simulation/run` funcionar;
-- simulação base for executada;
-- simulação com política for executada;
-- comparação entre cenários retornar diferenças de apoiadores, resistentes e hesitantes;
-- frontend exibir sliders de política;
-- frontend exibir resultados antes e depois;
-- frontend exibir gráfico comparativo;
-- teste com `policy_intensity` 0.0, 0.5 e 1.0 for verificado;
+- endpoint `POST /api/influence-simulation/run` funcionar;
+- rede de influência for gerada;
+- líderes e grupos forem criados;
+- influência local alterar o comportamento dos agentes;
+- resultado final retornar contagens, percentuais e métricas da rede;
+- frontend exibir a rede de influência;
+- frontend exibir cards de métricas;
+- frontend exibir gráfico ou resumo da evolução por ciclos;
+- endpoints das iterações anteriores continuarem funcionando;
 - documentação for atualizada se houver mudança relevante.
 
 ---
@@ -116,4 +125,4 @@ A iteração será considerada concluída quando:
 
 Após concluir esta iteração, atualizar este arquivo para:
 
-`ITERATION_03_INFLUENCE_GRAPH`
+`ITERATION_04_PSYCHOHISTORY_ENGINE`

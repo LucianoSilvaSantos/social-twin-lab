@@ -3,11 +3,14 @@ from fastapi import APIRouter
 
 from app.schemas.scenario import MockScenarioRunRequest, MockScenarioRunResponse
 from app.schemas.simulation import (
+    InfluenceSimulationRequest,
+    InfluenceSimulationResponse,
     PolicySimulationRequest,
     PolicySimulationResponse,
     SimulationRequest,
     SimulationResponse,
 )
+from app.simulation.influence import run_influence_simulation
 from app.simulation.policy_sandbox import run_policy_simulation
 from app.simulation.runner import run_simulation
 
@@ -18,8 +21,8 @@ router = APIRouter(tags=["api"])
 def api_status() -> dict[str, str]:
     return {
         "api": "online",
-        "iteration": "ITERATION_02_POLICY_SANDBOX",
-        "simulation": "policy-sandbox-enabled",
+        "iteration": "ITERATION_03_INFLUENCE_GRAPH",
+        "simulation": "influence-graph-enabled",
     }
 
 
@@ -72,4 +75,26 @@ def policy_simulation_run(payload: PolicySimulationRequest) -> PolicySimulationR
         base_scenario=simulation_output["base_scenario"],
         policy_scenario=simulation_output["policy_scenario"],
         difference=simulation_output["difference"],
+    )
+
+
+@router.post("/influence-simulation/run", response_model=InfluenceSimulationResponse)
+def influence_simulation_run(payload: InfluenceSimulationRequest) -> InfluenceSimulationResponse:
+    simulation_output = run_influence_simulation(
+        population_size=payload.population_size,
+        cycles=payload.cycles,
+        leaders_count=payload.leaders_count,
+    )
+
+    return InfluenceSimulationResponse(
+        scenario_name=payload.scenario_name,
+        population_size=payload.population_size,
+        cycles=payload.cycles,
+        leaders_count=payload.leaders_count,
+        network_summary=simulation_output["network_summary"],
+        final_result=simulation_output["final_result"],
+        timeline=simulation_output["timeline"],
+        network=simulation_output["network"],
+        leaders=simulation_output["leaders"],
+        interpretation=simulation_output["interpretation"],
     )

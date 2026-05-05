@@ -59,7 +59,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
             <Title order={4}>Social Twin Lab</Title>
           </Group>
           <Text size="sm" c="dimmed">
-            Iteration 02 - Policy Sandbox
+            Iteration 03 - Influence Graph
           </Text>
         </Group>
       </AppShell.Header>

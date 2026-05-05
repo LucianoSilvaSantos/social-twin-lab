@@ -94,3 +94,73 @@ class PolicySimulationResponse(BaseModel):
     base_scenario: SimulationScenarioSnapshot
     policy_scenario: SimulationScenarioSnapshot
     difference: PolicyDifference
+
+
+class InfluenceSimulationRequest(BaseModel):
+    scenario_name: str = Field(min_length=1, description="Scenario name for traceability.")
+    population_size: int = Field(ge=10, le=10000, description="Synthetic population size.")
+    cycles: int = Field(ge=1, le=100, description="Number of simulation cycles.")
+    leaders_count: int = Field(ge=1, le=50, default=5)
+
+    @field_validator("scenario_name")
+    @classmethod
+    def validate_scenario_name_influence(cls, value: str) -> str:
+        normalized = value.strip()
+        if not normalized:
+            raise ValueError("scenario_name must not be empty.")
+        return normalized
+
+
+class InfluenceNetworkSummary(BaseModel):
+    nodes: int = Field(ge=0)
+    edges: int = Field(ge=0)
+    leaders: int = Field(ge=0)
+    average_influence: float = Field(ge=0.0, le=1.0)
+
+
+class InfluenceGraphNode(BaseModel):
+    id: str
+    type: str
+    state: str
+    group_id: str
+    is_leader: bool
+    label: str
+
+
+class InfluenceGraphEdge(BaseModel):
+    id: str
+    source: str
+    target: str
+    weight: float = Field(ge=0.0, le=1.0)
+
+
+class InfluenceLeader(BaseModel):
+    id: str
+    name: str
+    influence_power: float = Field(ge=0.0, le=1.0)
+    stance: str
+
+
+class InfluenceGraphPayload(BaseModel):
+    nodes: list[InfluenceGraphNode]
+    edges: list[InfluenceGraphEdge]
+
+
+class InfluenceSimulationInterpretation(BaseModel):
+    dominant_trend: str
+    social_risk: str
+    polarization_level: str
+    network_effect: str
+
+
+class InfluenceSimulationResponse(BaseModel):
+    scenario_name: str
+    population_size: int
+    cycles: int
+    leaders_count: int
+    network_summary: InfluenceNetworkSummary
+    final_result: SimulationFinalResult
+    timeline: list[SimulationCycleResult]
+    network: InfluenceGraphPayload
+    leaders: list[InfluenceLeader]
+    interpretation: InfluenceSimulationInterpretation
